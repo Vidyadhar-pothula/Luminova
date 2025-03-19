@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMINOVA - Holographic Odyssey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        /* Particle Background */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #1a1a1a, #0a0a0a);
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-20vh); opacity: 1; }
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1s ease-out;
+        }
+
+        #loading-title {
+            font-size: 90px;
+            font-family: 'Orbitron', sans-serif;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .progress-bar {
+            width: 60%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #00bfff, #00ffff);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        /* Header Section */
+        .header-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-title {
+            font-size: 120px;
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .signin-button, .terms-button {
+            position: absolute;
+            top: 20px;
+            background: linear-gradient(45deg, #00bfff, #00ffff);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .signin-button {
+            right: 20px;
+        }
+
+        .terms-button {
+            right: 120px; /* Positioned to the left of Sign In */
+        }
+
+        .signin-button:hover, .terms-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .flip-card {
+            width: 800px;
+            height: 400px;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 40px;
+            background: rgba(29, 29, 31, 0.9);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        .welcome-title {
+            font-size: 48px;
+            color: #00ffff;
+            text-shadow: 0 0 15px #00ffff;
+        }
+
+        .welcome-quote {
+            font-size: 24px;
+            font-family: 'Roboto', sans-serif;
+            margin-top: 20px;
+        }
+
+        /* Features Section */
+        .features-section {
+            min-height: 100vh;
+            padding: 80px 20px;
+            background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 30px;
+            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .feature-card {
+            flex: 0 0 350px;
+            height: 500px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            scroll-snap-align: center;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .feature-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-image {
+            transform: scale(1.1);
+        }
+
+        .feature-content {
+            padding: 20px;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            color: #00bfff;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            color: #e0e0e0;
+        }
+
+        .feature-link {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .feature-link:hover {
+            color: #fff;
+        }
+
+        /* Sign-In Section (Retained for consistency, though linked externally) */
+        .signin-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .signin-section.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .signin-container {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.9), rgba(40, 40, 40, 0.9));
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 255, 255, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .signin-title {
+            font-size: 36px;
+            color: #00ffff;
+            text-shadow: 0 0 15px #00ffff;
+            margin-bottom: 30px;
+        }
+
+        .signin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .signin-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            outline: none;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .signin-input:focus {
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .signin-submit {
+            background: linear-gradient(45deg, #00bfff, #00ffff);
+            color: #000;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .signin-submit:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+        }
+
+        /* Terms and Conditions Placeholder Section */
+        .terms-placeholder {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .terms-placeholder.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .terms-box {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.9), rgba(40, 40, 40, 0.9));
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 255, 255, 0.2);
+            width: 100%;
+            max-width: 600px; /* Wider for terms content */
+            text-align: center;
+        }
+
+        .terms-box-title {
+            font-size: 36px;
+            color: #00ffff;
+            text-shadow: 0 0 15px #00ffff;
+            margin-bottom: 20px;
+        }
+
+        .terms-box-text {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            color: #e0e0e0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #00ffff;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Get Luminova Section */
+        .get-luminova-section {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, #0f0f0f, #1a1a1a);
+            padding: 50px;
+        }
+
+        .get-luminova-content {
+            text-align: center;
+        }
+
+        .get-luminova-title {
+            font-size: 48px;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff;
+            margin-bottom: 20px;
+        }
+
+        .get-luminova-text {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            color: #e0e0e0;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #00bfff, #00ffff);
+            color: #000;
+            padding: 20px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
+            animation: glowButton 2s infinite alternate;
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes glowButton {
+            from { box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+            to { box-shadow: 0 0 40px rgba(0, 255, 255, 0.9); }
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Audio Control */
+        #audio-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 255, 255, 0.3);
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        #audio-control:hover {
+            transform: scale(1.2);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            #loading-title { font-size: 60px; }
+            .progress-bar { width: 80%; }
+            .header-title { font-size: 80px; }
+            .flip-card { width: 100%; height: 300px; }
+            .welcome-title { font-size: 36px; }
+            .welcome-quote { font-size: 18px; }
+            .feature-card { flex: 0 0 300px; height: 400px; }
+            .feature-image { height: 150px; }
+            .get-luminova-title { font-size: 36px; }
+            .get-luminova-text { font-size: 16px; }
+            .cta-button { padding: 15px 30px; font-size: 18px; }
+            .signin-button, .terms-button { padding: 8px 15px; font-size: 14px; }
+            .signin-container, .terms-box { padding: 20px; max-width: 300px; }
+            .signin-title, .terms-box-title { font-size: 28px; }
+            .terms-button { right: 100px; }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" src="2023-05-01_-_Final_Descent_-_www.FesliyanStudios.com.mp3" loop></audio>
+
+    <!-- Particle Background -->
+    <div id="particles"></div>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div id="loading-title">LUMINOVA</div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="header-section" id="main-section">
+        <h1 class="header-title">LUMINOVA</h1>
+        <div class="terms-button" id="terms-btn">Terms & Conditions</div>
+        <div class="signin-button" id="signin-btn">Sign In</div>
+    </div>
+   
+    <!-- Welcome Section -->
+    <div class="welcome-section" id="welcome-section">
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <h2 class="welcome-title">Welcome to Luminova</h2>
+                    <p class="welcome-quote" style="font-family: 'Montserrat', sans-serif;">"Bringing the future closer with the brilliance of holograms. Experience reality reimagined through light and innovation."</p>
+                </div>
+                <div class="flip-card-back">
+                    <h2 class="welcome-title">Our Vision</h2>
+                    <p class="welcome-quote" style="font-family: 'Montserrat', sans-serif;">Luminova redefines interaction with cutting-edge holographic technology, blending art and innovation. We transform the impossible into reality, creating immersive experiences that connect people across dimensions and challenge the boundaries of perception.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section" id="features-section">
+        <div class="carousel">
+            <div class="feature-card">
+                <img src="hologram1.jpg" alt="Early Development" class="feature-image">
+                <div class="feature-content">
+                    <h3 class="feature-title">Early Development</h3>
+                    <p class="feature-text">Holography began with Dennis Gabor’s groundbreaking work in 1947.</p>
+                    <a href="luminovaearly.html" class="feature-link">Explore</a>
+                </div>
+            </div>
+            <div class="feature-card">
+                <img src="hologram2.jpg" alt="Digital Revolution" class="feature-image">
+                <div class="feature-content">
+                    <h3 class="feature-title">Digital Revolution</h3>
+                    <p class="feature-text">Digital holography unlocked new artistic and scientific possibilities.</p>
+                    <a href="luminovadigital.html" class="feature-link">Explore</a>
+                </div>
+            </div>
+            <div class="feature-card">
+                <img src="hologram3.jpg" alt="Interactive Holograms" class="feature-image">
+                <div class="feature-content">
+                    <h3 class="feature-title">Interactive Holograms</h3>
+                    <p class="feature-text">Real-time holographic interaction for immersive experiences.</p>
+                    <a href="luminova_interactive.html" class="feature-link">Explore</a>
+                </div>
+            </div>
+            <div class="feature-card">
+                <img src="hologram4.jpg" alt="Future Integration" class="feature-image">
+                <div class="feature-content">
+                    <h3 class="feature-title">Future Integration</h3>
+                    <p class="feature-text">Holography seamlessly woven into daily life.</p>
+                    <a href="luminova_futureint2.html" class="feature-link">Explore</a>
+                </div>
+            </div>
+            <div class="feature-card">
+                <img src="hologram5.jpg" alt="LUMINOVA Technology" class="feature-image">
+                <div class="feature-content">
+                    <h3 class="feature-title">LUMINOVA Technology</h3>
+                    <p class="feature-text">AI-driven optics for next-gen holography.</p>
+                    <a href="#" class="feature-link">Explore</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign-In Section (Retained for consistency) -->
+    <div class="signin-section" id="signin-section">
+        <div class="signin-container">
+            <span class="close-signin" id="close-signin">✖</span>
+            <h2 class="signin-title">Sign In</h2>
+            <form class="signin-form" id="signin-form">
+                <input type="text" class="signin-input" placeholder="Username" required>
+                <input type="password" class="signin-input" placeholder="Password" required>
+                <button type="submit" class="signin-submit">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Terms and Conditions Placeholder Section -->
+    <div class="terms-placeholder" id="terms-placeholder">
+        <div class="terms-box">
+            <span class="close-btn" id="close-terms">✖</span>
+            <h2 class="terms-box-title">Terms & Conditions</h2>
+            <p class="terms-box-text">Connect your Terms and Conditions page or content here.</p>
+        </div>
+    </div>
+
+    <!-- Get Luminova Section -->
+    <div class="get-luminova-section" id="get-luminova-section">
+        <div class="get-luminova-content">
+            <h2 class="get-luminova-title">Get Luminova Now</h2>
+            <p class="get-luminova-text">Step into the future with Luminova’s revolutionary holographic system.</p>
+            <a href="luminovabooking.html" class="cta-button">Order Now</a>
+        </div>
+    </div>
+
+    <!-- Audio Control -->
+    <div id="audio-control">▶️</div>
+
+    <script>
+        // DOM Elements
+        const bgMusic = document.getElementById('bgMusic');
+        const loadingScreen = document.getElementById('loading-screen');
+        const progress = document.getElementById('progress');
+        const audioControl = document.getElementById('audio-control');
+        const particlesContainer = document.getElementById('particles');
+        const signinBtn = document.getElementById('signin-btn');
+        const signinSection = document.getElementById('signin-section');
+        const closeSignin = document.getElementById('close-signin');
+        const signinForm = document.getElementById('signin-form');
+        const termsBtn = document.getElementById('terms-btn');
+        const termsPlaceholder = document.getElementById('terms-placeholder');
+        const closeTerms = document.getElementById('close-terms');
+
+        // State Variables
+        let isPlaying = false;
+
+        // Loading Animation
+        function startLoading() {
+            let progressValue = 0;
+            const loadingInterval = setInterval(() => {
+                progressValue += 5;
+                progress.style.width = progressValue + '%';
+                if (progressValue >= 100) {
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        loadingScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingScreen.style.display = 'none';
+                            document.body.style.overflow = 'auto';
+                            tryPlayMusic();
+                        }, 1000);
+                    }, 500);
+                }
+            }, 100);
+        }
+
+        // Audio Functions
+        function tryPlayMusic() {
+            const musicState = sessionStorage.getItem('musicPlaying');
+            const musicPosition = sessionStorage.getItem('musicPosition');
+            if (musicState === 'true' && musicPosition) bgMusic.currentTime = parseFloat(musicPosition);
+            const playPromise = bgMusic.play();
+            if (playPromise) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    audioControl.textContent = '⏸️';
+                    sessionStorage.setItem('musicPlaying', 'true');
+                }).catch(error => {
+                    console.log('Autoplay prevented: ', error);
+                    isPlaying = false;
+                    audioControl.textContent = '▶️';
+                });
+            }
+        }
+
+        audioControl.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                audioControl.textContent = '▶️';
+                sessionStorage.setItem('musicPlaying', 'false');
+            } else {
+                bgMusic.play().catch(error => console.log('Play failed: ', error));
+                audioControl.textContent = '⏸️';
+                sessionStorage.setItem('musicPlaying', 'true');
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Particle Animation
+        function createParticles() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Sign-In Functions (Linked Externally)
+        signinBtn.addEventListener('click', () => {
+            window.location.href = 'luminova_sign_in.html'; // Replace with your sign-in page URL
+        });
+
+        closeSignin.addEventListener('click', () => {
+            signinSection.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        });
+
+        signinForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Sign-in successful! (This is a demo)');
+            signinSection.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Terms and Conditions Placeholder Functions
+        termsBtn.addEventListener('click', () => {
+            termsPlaceholder.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+            // Prevent scrolling
+            window.location.href = 'luminovaTermsCond.html'; // Replace with your sign-in page URL
+        });
+
+        closeTerms.addEventListener('click', () => {
+            termsPlaceholder.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        });
+
+        // Event Listeners
+        window.addEventListener('load', () => {
+            startLoading();
+            createParticles();
+        });
+
+        document.addEventListener('click', function tryMusicOnce() {
+            if (!isPlaying) tryPlayMusic();
+            document.removeEventListener('click', tryMusicOnce);
+        });
+    </script>
+</body>
+</html>

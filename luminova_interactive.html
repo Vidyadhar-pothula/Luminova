@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Holograms - LUMINOVA</title>
+    <style>
+        /* Basic Styling */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        :root {
+            --cyan: #00ffff;
+            --blue: #00bfff;
+            --purple: #8a2be2;
+            --dark: #0f0f0f;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--dark);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--blue);
+            border-radius: 4px;
+        }
+
+        /* Header */
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-sizing: border-box;
+            border-bottom: 1px solid var(--cyan);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-size: 28px;
+            color: var(--cyan);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(0, 255, 255, 1);
+            }
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1200/600');
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, var(--dark), transparent);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s forwards 0.5s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #fff;
+            text-shadow: 0 0 15px var(--cyan);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+
+        .hero-button {
+            background: transparent;
+            border: 2px solid var(--cyan);
+            color: var(--cyan);
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .hero-button:hover {
+            background-color: var(--cyan);
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Content */
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 32px;
+            color: var(--cyan);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--cyan), transparent);
+        }
+
+        .section-subtitle {
+            font-size: 22px;
+            color: var(--blue);
+            margin-bottom: 15px;
+        }
+
+        .section-text {
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #ddd;
+        }
+
+        /* Interactive Gesture Section */
+        .gesture-section {
+            background-color: rgba(20, 20, 20, 0.8);
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 60px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .gesture-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .gesture-box {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            border: 1px solid var(--cyan);
+            padding: 20px;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .gesture-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+        }
+
+        .gesture-box-title {
+            font-size: 18px;
+            color: var(--cyan);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .gesture-frame {
+            width: 100%;
+            height: 250px;
+            border: none;
+            border-radius: 4px;
+            background-color: #1a1a1a;
+            position: relative;
+        }
+
+        .gesture-detection {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .hand-icon {
+            font-size: 50px;
+            color: var(--cyan);
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        .hand-status {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--cyan);
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .gesture-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .control-btn {
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background-color: var(--cyan);
+            color: var(--dark);
+        }
+
+        .scanning-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, transparent, var(--cyan), transparent);
+            animation: scan 2s infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background-color: rgba(26, 26, 26, 0.8);
+            border-radius: 10px;
+            padding: 30px;
+            border-left: 3px solid var(--cyan);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 36px;
+            color: var(--cyan);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 22px;
+            color: var(--cyan);
+            margin-bottom: 15px;
+        }
+
+        .feature-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #bbb;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            margin-top: 80px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .step {
+            background-color: rgba(26, 26, 26, 0.8);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .step.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .step-number {
+            background-color: var(--cyan);
+            color: #000;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            color: var(--cyan);
+            margin-bottom: 15px;
+        }
+
+        .step-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #bbb;
+        }
+
+        /* Glowing Dots */
+        .glowing-dots {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: var(--cyan);
+            opacity: 0.7;
+            animation: floatDot 20s linear infinite;
+        }
+
+        @keyframes floatDot {
+            0% {
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(10px, 10px);
+            }
+            50% {
+                transform: translate(0, 20px);
+            }
+            75% {
+                transform: translate(-10px, 10px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        /* Footer */
+        footer {
+            background-color: #000;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid #333;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .copyright {
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        /* Dark/Light Theme */
+        body.light-theme {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        body.light-theme header {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid var(--blue);
+        }
+
+        body.light-theme .logo {
+            color: var(--blue);
+        }
+
+        body.light-theme .theme-toggle {
+            border: 1px solid var(--blue);
+            color: var(--blue);
+        }
+
+        body.light-theme .section-title {
+            color: var(--blue);
+        }
+
+        body.light-theme .section-title::after {
+            background: linear-gradient(to right, var(--blue), transparent);
+        }
+
+        body.light-theme .section-text {
+            color: #444;
+        }
+
+        body.light-theme .gesture-section {
+            background-color: rgba(240, 240, 240, 0.9);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+        }
+
+        body.light-theme .gesture-box {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--blue);
+        }
+
+        body.light-theme .gesture-box-title {
+            color: var(--blue);
+        }
+
+        body.light-theme .gesture-frame {
+            background-color: #e5e5e5;
+        }
+
+        body.light-theme .hand-icon {
+            color: var(--blue);
+        }
+
+        body.light-theme .hand-status {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: var(--blue);
+        }
+
+        body.light-theme .control-btn {
+            border: 1px solid var(--blue);
+            color: var(--blue);
+        }
+
+        body.light-theme .control-btn:hover {
+            background-color: var(--blue);
+            color: #fff;
+        }
+
+        body.light-theme .dot {
+            background-color: var(--blue);
+        }
+
+        body.light-theme .scanning-effect {
+            background: linear-gradient(to right, transparent, var(--blue), transparent);
+        }
+
+        body.light-theme .feature-card,
+        body.light-theme .step {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-left: 3px solid var(--blue);
+        }
+
+        body.light-theme .feature-icon,
+        body.light-theme .feature-title,
+        body.light-theme .step-title {
+            color: var(--blue);
+        }
+
+        body.light-theme .feature-text,
+        body.light-theme .step-text {
+            color: #444;
+        }
+
+        body.light-theme .step-number {
+            background-color: var(--blue);
+        }
+
+        body.light-theme footer {
+            background-color: #e0e0e0;
+            border-top: 1px solid #ccc;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .section-title {
+                font-size: 28px;
+            }
+
+            .gesture-container {
+                grid-template-columns: 1fr;
+            }
+
+            .gesture-box {
+                min-height: 250px;
+            }
+
+            .gesture-frame {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <body>
+        <header>
+            <div class="logo">LUMINOVA</div>
+            <button class="theme-toggle">Toggle Theme</button>
+        </header>
+    
+        <div class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Interactive Holograms</h1>
+                <p class="hero-subtitle">Control the digital world with your hands</p>
+                <a href="#gesture-demo" class="hero-button">Try it Now</a>
+            </div>
+    
+            <!-- New Gesture Section in Hero -->
+            <div class="hero-gesture-section">
+                <div class="hero-gesture-container">
+                    <div class="gesture-box">
+                        <h3 class="gesture-box-title">Camera Feed</h3>
+                        <div class="gesture-frame">
+                            <div class="gesture-detection">
+                                <div class="hand-icon">✋</div>
+                                <p>Wave to interact</p>
+                                <div class="scanning-effect"></div>
+                                <div class="hand-status">Detecting...</div>
+                            </div>
+                        </div>
+                        <div class="gesture-controls">
+                            <button class="control-btn start-hero-btn">Start</button>
+                        </div>
+                    </div>
+    
+                    <div class="gesture-box">
+                        <h3 class="gesture-box-title">Web Control</h3>
+                        <div class="gesture-frame">
+                            <iframe id="hero-demo-iframe" class="gesture-frame" src="https://www.apple.com" style="background-color: #fff;"></iframe>
+                        </div>
+                        <div class="gesture-controls">
+                            <button class="control-btn reset-hero-btn">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="content">
+            <!-- Rest of your existing content remains unchanged -->
+            <div class="section">
+                <h2 class="section-title">The Future of Interaction</h2>
+                <p class="section-text">
+                    Interactive holograms represent the next frontier in human-computer interaction. By blending holographic technology with advanced gesture recognition, we've created a system that allows users to manipulate digital content with their hands—no controllers required.
+                </p>
+                <p class="section-text">
+                    Our proprietary gesture recognition algorithm can detect and interpret hand movements with remarkable precision, allowing for intuitive control of websites, applications, and holographic displays.
+                </p>
+            </div>
+    
+            <!-- Existing gesture demo section remains unchanged -->
+            <div class="section gesture-section" id="gesture-demo">
+                <!-- ...your original gesture demo content... -->
+            </div>
+    
+            <!-- Rest of your sections (Applications, How It Works) remain unchanged -->
+        </div>
+    
+        <footer>
+            <div class="footer-content">
+                <div class="logo">LUMINOVA</div>
+                <div class="copyright">© 2025 LUMINOVA | All Rights Reserved</div>
+            </div>
+        </footer>
+    <script>
+        // Existing Theme Toggle and Scroll Animation Code
+        const themeToggle = document.querySelector('.theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+        });
+
+        const sections = document.querySelectorAll('.section');
+        const cards = document.querySelectorAll('.feature-card');
+        const steps = document.querySelectorAll('.step');
+
+        function checkVisibility() {
+            const triggerPosition = window.innerHeight * 0.85;
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < triggerPosition) {
+                    section.classList.add('visible');
+                }
+            });
+            cards.forEach((card, index) => {
+                const cardTop = card.getBoundingClientRect().top;
+                if (cardTop < triggerPosition) {
+                    setTimeout(() => card.classList.add('visible'), index * 100);
+                }
+            });
+            steps.forEach((step, index) => {
+                const stepTop = step.getBoundingClientRect().top;
+                if (stepTop < triggerPosition) {
+                    setTimeout(() => step.classList.add('visible'), index * 100);
+                }
+            });
+        }
+        checkVisibility();
+        window.addEventListener('scroll', checkVisibility);
+
+        // New Hero Gesture Section Logic
+        const startHeroBtn = document.querySelector('.start-hero-btn');
+        const resetHeroBtn = document.querySelector('.reset-hero-btn');
+        const heroHandStatus = document.querySelector('.hero-gesture-section .hand-status');
+        const heroHandIcon = document.querySelector('.hero-gesture-section .hand-icon');
+        const heroDemoIframe = document.getElementById('hero-demo-iframe');
+
+        let heroDetectionActive = false;
+        let heroGestureInterval;
+        let heroGestures = ['✋', '👆', '👌', '✌️', '👍'];
+        let heroCurrentGesture = 0;
+
+        startHeroBtn.addEventListener('click', () => {
+            if (!heroDetectionActive) {
+                heroDetectionActive = true;
+                startHeroBtn.textContent = 'Stop';
+                heroHandStatus.textContent = 'Detecting...';
+                heroHandStatus.style.backgroundColor = 'rgba(0, 255, 255, 0.2)';
+
+                heroGestureInterval = setInterval(() => {
+                    heroHandIcon.textContent = heroGestures[heroCurrentGesture];
+                    heroCurrentGesture = (heroCurrentGesture + 1) % heroGestures.length;
+
+                    if (Math.random() > 0.7) {
+                        heroHandStatus.textContent = 'Gesture Recognized!';
+                        heroHandStatus.style.backgroundColor = 'rgba(0, 255, 255, 0.5)';
+
+                        // Simulate iframe control (e.g., scroll)
+                        const scrollAmount = Math.random() > 0.5 ? 200 : -200;
+                        heroDemoIframe.contentWindow.scrollBy(0, scrollAmount);
+
+                        setTimeout(() => {
+                            heroHandStatus.textContent = 'Detecting...';
+                            heroHandStatus.style.backgroundColor = 'rgba(0, 255, 255, 0.2)';
+                        }, 1000);
+                    }
+                }, 2000);
+            } else {
+                heroDetectionActive = false;
+                startHeroBtn.textContent = 'Start';
+                heroHandStatus.textContent = 'Camera Off';
+                heroHandIcon.textContent = '✋';
+                clearInterval(heroGestureInterval);
+            }
+        });
+
+        resetHeroBtn.addEventListener('click', () => {
+            heroDemoIframe.src = 'https://www.apple.com';
+            if (heroDetectionActive) {
+                heroHandStatus.textContent = 'Detecting...';
+                heroHandIcon.textContent = '✋';
+            }
+        });
+        startBtn.addEventListener('click', () => {
+            if (!detectionActive) {
+                detectionActive = true;
+                startBtn.textContent = 'Stop Camera';
+                handStatus.textContent = 'Detecting...';
+                handStatus.style.backgroundColor = 'rgba(0, 255, 255, 0.2)';
+                
+                // Simulate hand detection
+                gestureInterval = setInterval(() => {
+                    handIcon.textContent = gestures[currentGesture];
+                    currentGesture = (currentGesture + 1) % gestures.length;
+                    
+                    // Simulate gesture recognition
+                    if (Math.random() > 0.7) {
+                        handStatus.textContent = 'Gesture Recognized!';
+                        handStatus.style.backgroundColor = 'rgba(0, 255, 255, 0.5)';
+                        setTimeout(() => {
+                            handStatus.textContent = 'Detecting...';
+                            handStatus.style.backgroundColor = 'rgba(0, 255, 255, 0.2)';
+                        }, 1000);
+                    }
+                }, 2000);
+            } else {
+                detectionActive = false;
+                startBtn.textContent = 'Start Camera';
+                handStatus.textContent = 'Camera Off';
+                handIcon.textContent = '✋';
+                clearInterval(gestureInterval);
+            }
+        });
+        
+        calibrateBtn.addEventListener('click', () => {
+            if (detectionActive) {
+                handStatus.textContent = 'Calibrating...';
+                handStatus.style.backgroundColor = 'rgba(138, 43, 226, 0.5)';
+                
+                // Simulate calibration
+                setTimeout(() => {
+                    handStatus.textContent = 'Calibrated!';
+                    setTimeout(() => {
+                        handStatus.textContent = 'Detecting...';
+                        handStatus.style.backgroundColor = 'rgba(0, 255, 255, 0.2)';
+                    }, 1000);
+                }, 2000);
+            } else {
+                alert('Please start the camera first.');
+            }
+        });
+        
+  
+    
+            // Link gesture simulation to iframe
+            if (detectionActive) {
+                clearInterval(gestureInterval); // Reset existing interval
+                gestureInterval = setInterval(() => {
+                    handIcon.textContent = gestures[currentGesture];
+                    currentGesture = (currentGesture + 1) % gestures.length;
+    
+                    if (Math.random() > 0.7) {
+                        const gestureActions = ['swipe-left', 'swipe-right', 'wave'];
+                        const randomGesture = gestureActions[Math.floor(Math.random() * gestureActions.length)];
+                        demoIframe.contentWindow.postMessage(randomGesture, '*');
+                        handStatus.textContent = 'Gesture Recognized!';
+                        handStatus.style.backgroundColor = 'rgba(0, 255, 255, 0.5)';
+                        setTimeout(() => {
+                            handStatus.textContent = 'Detecting...';
+                            handStatus.style.backgroundColor = 'rgba(0, 255, 255, 0.2)';
+                        }, 1000);
+                    }
+                }, 2000);
+            }
+    
+        resetBtn.addEventListener('click', () => {
+            demoIframe.src = 'about:blank';
+            if (detectionActive) {
+                handStatus.textContent = 'Detecting...';
+                handIcon.textContent = '✋';
+            }
+        });
+    </script>
+    </body>
+</html>

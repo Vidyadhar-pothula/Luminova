@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luminova Technology - Applications</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            scroll-behavior: smooth;
+        }
+
+        /* Particle Background */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #1a1a1a, #0a0a0a);
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-20vh); opacity: 1; }
+        }
+
+        /* Header */
+        .header {
+            height: 20vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .header-title {
+            font-size: 60px;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Applications Section */
+        .applications-section {
+            min-height: 80vh;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
+        }
+
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .application-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .application-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .application-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .application-card:hover .application-image {
+            opacity: 0.8;
+        }
+
+        .application-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .application-title {
+            font-size: 24px;
+            color: #00bfff;
+            margin-bottom: 10px;
+        }
+
+        .application-text {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            color: #e0e0e0;
+        }
+
+        /* Wireframe Modal */
+        .wireframe-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .wireframe-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .wireframe-container {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.9), rgba(40, 40, 40, 0.9));
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 255, 255, 0.2);
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-wireframe {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #00ffff;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-wireframe:hover {
+            transform: rotate(90deg);
+        }
+
+        .wireframe-title {
+            font-size: 36px;
+            color: #00ffff;
+            text-shadow: 0 0 15px #00ffff;
+            margin-bottom: 20px;
+        }
+
+        .wireframe-view {
+            width: 100%;
+            height: 400px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .wireframe-animation {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: wireframeSpin 10s infinite linear;
+        }
+
+        @keyframes wireframeSpin {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(180deg) scale(1.1); }
+            100% { transform: rotateY(360deg) scale(1); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header-title { font-size: 40px; }
+            .applications-grid { grid-template-columns: 1fr; }
+            .application-card { height: auto; }
+            .application-image { height: 120px; }
+            .wireframe-container { padding: 20px; max-width: 90%; }
+            .wireframe-title { font-size: 28px; }
+            .wireframe-view { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <h1 class="header-title">Luminova Technology</h1>
+    </div>
+
+    <!-- Applications Section -->
+    <div class="applications-section">
+        <div class="applications-grid">
+            <div class="application-card" data-wireframe="healthcare">
+                <img src="healthcare_hologram.jpg" alt="Healthcare" class="application-image">
+                <div class="application-content">
+                    <h3 class="application-title">Healthcare</h3>
+                    <p class="application-text">Revolutionizing surgery with 3D holographic organ models.</p>
+                </div>
+            </div>
+            <div class="application-card" data-wireframe="entertainment">
+                <img src="entertainment_hologram.jpg" alt="Entertainment" class="application-image">
+                <div class="application-content">
+                    <h3 class="application-title">Entertainment</h3>
+                    <p class="application-text">Immersive holographic concerts and gaming experiences.</p>
+                </div>
+            </div>
+            <div class="application-card" data-wireframe="education">
+                <img src="education_hologram.jpg" alt="Education" class="application-image">
+                <div class="application-content">
+                    <h3 class="application-title">Education</h3>
+                    <p class="application-text">Interactive holographic lessons for enhanced learning.</p>
+                </div>
+            </div>
+            <div class="application-card" data-wireframe="engineering">
+                <img src="engineering_hologram.jpg" alt="Engineering" class="application-image">
+                <div class="application-content">
+                    <h3 class="application-title">Engineering</h3>
+                    <p class="application-text">Real-time holographic blueprints for design and prototyping.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wireframe Modal -->
+    <div class="wireframe-modal" id="wireframe-modal">
+        <div class="wireframe-container">
+            <span class="close-wireframe" id="close-wireframe">✖</span>
+            <h2 class="wireframe-title" id="wireframe-title"></h2>
+            <div class="wireframe-view" id="wireframe-view">
+                <img class="wireframe-animation" id="wireframe-image" src="" alt="Wireframe">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const particlesContainer = document.getElementById('particles');
+        const applicationCards = document.querySelectorAll('.application-card');
+        const wireframeModal = document.getElementById('wireframe-modal');
+        const wireframeTitle = document.getElementById('wireframe-title');
+        const wireframeImage = document.getElementById('wireframe-image');
+        const closeWireframe = document.getElementById('close-wireframe');
+
+        // Particle Animation
+        function createParticles() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Wireframe Data
+        const wireframes = {
+            healthcare: { title: 'Healthcare Hologram', src: 'healthcare_wireframe.jpg' },
+            entertainment: { title: 'Entertainment Hologram', src: 'entertainment_wireframe.jpg' },
+            education: { title: 'Education Hologram', src: 'education_wireframe.jpg' },
+            engineering: { title: 'Engineering Hologram', src: 'engineering_wireframe.jpg' }
+        };
+
+        // Event Listeners for Application Cards
+        applicationCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const wireframeKey = card.getAttribute('data-wireframe');
+                const wireframe = wireframes[wireframeKey];
+                wireframeTitle.textContent = wireframe.title;
+                wireframeImage.src = wireframe.src;
+                wireframeModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            });
+        });
+
+        // Close Wireframe Modal
+        closeWireframe.addEventListener('click', () => {
+            wireframeModal.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        });
+
+        // Initialize Particles on Load
+        window.addEventListener('load', createParticles);
+    </script>
+</body>
+</html>

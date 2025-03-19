@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holography - LUMINOVA</title>
+    <style>
+        /* Basic Styling */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        :root {
+            --cyan: #00ffff;
+            --blue: #00bfff;
+            --dark: #0f0f0f;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--dark);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--blue);
+            border-radius: 4px;
+        }
+
+        /* Header */
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-sizing: border-box;
+            border-bottom: 1px solid var(--cyan);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-size: 28px;
+            color: var(--cyan);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(0, 255, 255, 1);
+            }
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1200/600');
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, var(--dark), transparent);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s forwards 0.5s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #fff;
+            text-shadow: 0 0 15px var(--cyan);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            margin-bottom: 0;
+            color: #ccc;
+        }
+
+        /* Content */
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 32px;
+            color: var(--cyan);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--cyan), transparent);
+        }
+
+        .section-text {
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #ddd;
+        }
+
+        /* Info Cards */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background-color: rgba(26, 26, 26, 0.8);
+            border-radius: 8px;
+            padding: 25px;
+            border-left: 3px solid var(--cyan);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) !important;
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+        }
+
+        .card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .card-title {
+            font-size: 22px;
+            color: var(--cyan);
+            margin-bottom: 15px;
+        }
+
+        .card-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #bbb;
+        }
+
+        /* Interactive Element - Timeline */
+        .interactive-timeline {
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 40px;
+        }
+
+        .timeline-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .year-btn {
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            min-width: 80px;
+            transition: all 0.3s ease;
+        }
+
+        .year-btn:hover, .year-btn.active {
+            background-color: var(--cyan);
+            color: #000;
+        }
+
+        .timeline-content {
+            background-color: rgba(26, 26, 26, 0.8);
+            border-radius: 8px;
+            padding: 25px;
+            min-height: 150px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .timeline-content.active {
+            opacity: 1;
+        }
+
+        .timeline-year {
+            font-size: 24px;
+            color: var(--cyan);
+            margin-bottom: 10px;
+        }
+
+        .timeline-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        /* Hologram Effect */
+        .hologram-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            margin: 60px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hologram {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: rotation 20s linear infinite;
+        }
+
+        .hologram::before, .hologram::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            animation: pulse 2s ease-out infinite;
+        }
+
+        .hologram::before {
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+        }
+
+        .hologram::after {
+            width: 80%;
+            height: 80%;
+            border: 2px solid rgba(0, 255, 255, 0.7);
+            animation-delay: 0.5s;
+        }
+
+        .hologram-text {
+            color: var(--cyan);
+            text-shadow: 0 0 5px var(--cyan);
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.5);
+            }
+        }
+
+        /* Footer */
+        footer {
+            background-color: #000;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid #333;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .copyright {
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        /* Dark/Light Theme */
+        body.light-theme {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        body.light-theme header {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid var(--blue);
+        }
+
+        body.light-theme .logo {
+            color: var(--blue);
+        }
+
+        body.light-theme .theme-toggle {
+            border: 1px solid var(--blue);
+            color: var(--blue);
+        }
+
+        body.light-theme .section-title {
+            color: var(--blue);
+        }
+
+        body.light-theme .section-title::after {
+            background: linear-gradient(to right, var(--blue), transparent);
+        }
+
+        body.light-theme .section-text {
+            color: #444;
+        }
+
+        body.light-theme .card {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-left: 3px solid var(--blue);
+        }
+
+        body.light-theme .card-title {
+            color: var(--blue);
+        }
+
+        body.light-theme .card-text {
+            color: #555;
+        }
+
+        body.light-theme .timeline-content {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        body.light-theme .timeline-year {
+            color: var(--blue);
+        }
+
+        body.light-theme .timeline-description {
+            color: #444;
+        }
+
+        body.light-theme .year-btn {
+            border: 1px solid var(--blue);
+            color: #333;
+        }
+
+        body.light-theme .year-btn:hover, body.light-theme .year-btn.active {
+            background-color: var(--blue);
+            color: #fff;
+        }
+
+        body.light-theme .hero::after {
+            background: linear-gradient(to top, #f0f0f0, transparent);
+        }
+
+        body.light-theme .hologram {
+            background: rgba(0, 191, 255, 0.05);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+        }
+
+        body.light-theme .hologram::before {
+            border: 2px solid rgba(0, 191, 255, 0.5);
+        }
+
+        body.light-theme .hologram::after {
+            border: 2px solid rgba(0, 191, 255, 0.7);
+        }
+
+        body.light-theme .hologram-text {
+            color: var(--blue);
+            text-shadow: 0 0 5px var(--blue);
+        }
+
+        body.light-theme footer {
+            background-color: #e0e0e0;
+            border-top: 1px solid #ccc;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .section-title {
+                font-size: 28px;
+            }
+
+            .hologram {
+                width: 120px;
+                height: 120px;
+            }
+
+            .hologram-text {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">LUMINOVA</div>
+        <button class="theme-toggle">Toggle Theme</button>
+    </header>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Holography</h1>
+            <p class="hero-subtitle">A revolution in visual technology</p>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="section">
+            <h2 class="section-title">The Birth of Holography</h2>
+            <p class="section-text">
+                Holography began with Dennis Gabor in 1947 while working to improve electron microscopy. He developed the concept of "wavefront reconstruction" which became the foundation of holographic technology. This groundbreaking work earned him the Nobel Prize in Physics in 1971.
+            </p>
+            <p class="section-text">
+                The practical implementation of holography had to wait until 1960 when Theodore Maiman invented the laser, providing the coherent light source needed to create true holograms.
+            </p>
+        </div>
+
+        <div class="hologram-container">
+            <div class="hologram-container">
+                <div class="hologram">
+                    <span class="hologram-text">3D</span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="info-cards">
+                    <div class="card">
+                        <h3 class="card-title">The Theory</h3>
+                        <p class="card-text">
+                            Gabor's theory proposed recording both amplitude and phase information of light waves, unlike photography which only captures intensity. This allows for the recreation of three-dimensional images.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">First Holograms</h3>
+                        <p class="card-text">
+                            The first successful transmission holograms were created by Emmett Leith and Juris Upatnieks at the University of Michigan in 1962 using the newly invented laser.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Modern Applications</h3>
+                        <p class="card-text">
+                            Today, holography is used in security features, data storage, medical imaging, and art. The technology continues to evolve with new applications emerging in augmented reality.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section interactive-timeline">
+                <h2 class="section-title">Holography Timeline</h2>
+                <div class="timeline-controls">
+                    <button class="year-btn active" data-year="1947">1947</button>
+                    <button class="year-btn" data-year="1960">1960</button>
+                    <button class="year-btn" data-year="1962">1962</button>
+                    <button class="year-btn" data-year="1971">1971</button>
+                    <button class="year-btn" data-year="1980">1980</button>
+                </div>
+                <div class="timeline-content active" id="timeline-content">
+                    <h3 class="timeline-year">1947</h3>
+                    <p class="timeline-description">Dennis Gabor develops the theory of wavefront reconstruction while working to improve electron microscopes at the British Thomson-Houston Company.</p>
+                </div>
+            </div>
+        </div>
+    
+        <footer>
+            <div class="footer-content">
+                <div class="logo">LUMINOVA</div>
+                <div class="copyright">© 2025 LUMINOVA | All Rights Reserved</div>
+            </div>
+        </footer>
+    
+        <script>
+            // Theme Toggle
+            const themeToggle = document.querySelector('.theme-toggle');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-theme');
+            });
+    
+            // Scroll Animation
+            const sections = document.querySelectorAll('.section');
+            const cards = document.querySelectorAll('.card');
+            
+            function checkVisibility() {
+                const triggerPosition = window.innerHeight * 0.85;
+                
+                sections.forEach(section => {
+                    const sectionTop = section.getBoundingClientRect().top;
+                    if (sectionTop < triggerPosition) {
+                        section.classList.add('visible');
+                    }
+                });
+                
+                cards.forEach((card, index) => {
+                    const cardTop = card.getBoundingClientRect().top;
+                    if (cardTop < triggerPosition) {
+                        setTimeout(() => {
+                            card.classList.add('visible');
+                        }, index * 100);
+                    }
+                });
+            }
+            
+            // Initial check
+            checkVisibility();
+            
+            // Check on scroll
+            window.addEventListener('scroll', checkVisibility);
+    
+            // Timeline Interaction
+            const timelineData = {
+                "1947": {
+                    year: "1947",
+                    description: "Dennis Gabor develops the theory of wavefront reconstruction while working to improve electron microscopes at the British Thomson-Houston Company."
+                },
+                "1960": {
+                    year: "1960",
+                    description: "Theodore Maiman invents the first working laser at Hughes Research Laboratories, providing the coherent light source needed for holography."
+                },
+                "1962": {
+                    year: "1962",
+                    description: "Emmett Leith and Juris Upatnieks create the first laser transmission hologram at the University of Michigan, making high-quality holograms possible."
+                },
+                "1971": {
+                    year: "1971",
+                    description: "Dennis Gabor receives the Nobel Prize in Physics for his invention and development of the holographic method."
+                },
+                "1980": {
+                    year: "1980s",
+                    description: "Holography begins to be used in commercial applications, particularly in security features for credit cards and banknotes as anti-counterfeiting measures."
+                }
+            };
+    
+            const yearBtns = document.querySelectorAll('.year-btn');
+            const timelineContent = document.getElementById('timeline-content');
+            
+            yearBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    yearBtns.forEach(b => b.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    btn.classList.add('active');
+                    
+                    // Get year data
+                    const yearData = timelineData[btn.dataset.year];
+                    
+                    // Animate content change
+                    timelineContent.classList.remove('active');
+                    
+                    setTimeout(() => {
+                        timelineContent.innerHTML = `
+                            <h3 class="timeline-year">${yearData.year}</h3>
+                            <p class="timeline-description">${yearData.description}</p>
+                        `;
+                        timelineContent.classList.add('active');
+                    }, 300);
+                });
+            });
+    
+            // Hologram Animation Enhancement
+            const hologram = document.querySelector('.hologram');
+            
+            document.addEventListener('mousemove', (e) => {
+                const mouseX = e.clientX / window.innerWidth - 0.5;
+                const mouseY = e.clientY / window.innerHeight - 0.5;
+                
+                hologram.style.transform = `rotate(${mouseX * 20}deg) translateY(${mouseY * 20}px)`;
+            });
+        </script>
+    </body>
+    </html>

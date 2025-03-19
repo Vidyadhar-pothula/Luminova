@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMINOVA - Holographic Technology</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        /* Particle Background */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #1a1a1a, #0a0a0a);
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-20vh); opacity: 1; }
+        }
+
+        /* Header */
+        .header {
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            font-size: 28px;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            text-decoration: none;
+        }
+
+        .back-button {
+            background: linear-gradient(45deg, #00bfff, #00ffff);
+            color: #000;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 80px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)), url('futuretech.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 60px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            font-family: 'Roboto', sans-serif;
+            color: #e0e0e0;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Workflow Section */
+        .workflow-section {
+            padding: 100px 50px;
+            background: rgba(10, 10, 10, 0.9);
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-size: 48px;
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            text-align: center;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .section-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .workflow-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .workflow-step {
+            display: flex;
+            margin-bottom: 80px;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .workflow-step.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .workflow-step:nth-child(even) {
+            flex-direction: row-reverse;
+            transform: translateX(100px);
+        }
+
+        .workflow-step:nth-child(even).visible {
+            transform: translateX(0);
+        }
+
+        .workflow-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -40px;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(to bottom, #00ffff, rgba(0, 255, 255, 0.2));
+        }
+
+        .step-number {
+            flex: 0 0 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #00bfff, #00ffff);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            margin-right: 30px;
+            z-index: 2;
+            transition: transform 0.5s ease 0.3s;
+            transform: scale(0);
+        }
+
+        .workflow-step.visible .step-number {
+            transform: scale(1);
+        }
+
+        .workflow-step:nth-child(even) .step-number {
+            margin-right: 0;
+            margin-left: 30px;
+        }
+
+        .step-content {
+            flex: 1;
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            transition: transform 0.5s ease 0.5s, box-shadow 0.5s ease 0.5s;
+            transform: translateY(30px);
+        }
+
+        .workflow-step.visible .step-content {
+            transform: translateY(0);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .step-title {
+            font-size: 28px;
+            color: #00bfff;
+            margin-bottom: 15px;
+        }
+
+        .step-description {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* Use Cases Section */
+        .use-cases-section {
+            padding: 100px 50px;
+            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9), rgba(15, 15, 15, 0.9));
+        }
+
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .use-case-card {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
+        }
+
+        .use-case-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .use-case-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .use-case-image {
+            width: 100%;
+            height: 200px;
+            background-color: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .use-case-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 191, 255, 0.3), rgba(0, 255, 255, 0.3));
+            opacity: 0.7;
+        }
+
+        .use-case-content {
+            padding: 25px;
+        }
+
+        .use-case-title {
+            font-size: 22px;
+            color: #00bfff;
+            margin-bottom: 15px;
+        }
+
+        .use-case-description {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* Future Vision Section */
+        .future-vision-section {
+            padding: 100px 50px;
+            background: radial-gradient(circle at center, rgba(15, 15, 15, 0.9), rgba(5, 5, 5, 0.95));
+            text-align: center;
+        }
+
+        .vision-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .vision-text {
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+            color: #e0e0e0;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #00bfff, #00ffff);
+            color: #000;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            padding: 100px 50px;
+            background: rgba(12, 12, 12, 0.9);
+            overflow: hidden;
+        }
+
+        .timeline-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: linear-gradient(to bottom, #00bfff, #00ffff);
+            transform: translateX(-50%);
+            height: 0;
+            transition: height 1.5s ease;
+        }
+
+        .timeline-container.visible::before {
+            height: 100%;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 60px;
+            opacity: 0;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .timeline-item:nth-child(odd) {
+            padding-right: calc(50% + 30px);
+            transform: translateX(-50px);
+        }
+
+        .timeline-item:nth-child(even) {
+            padding-left: calc(50% + 30px);
+            transform: translateX(50px);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .timeline-item.visible::before {
+            transform: scale(1);
+        }
+
+        .timeline-item:nth-child(odd)::before {
+            right: calc(50% - 10px);
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: calc(50% - 10px);
+        }
+
+        .timeline-item:nth-child(odd)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #00ffff);
+            transition: width 0.5s ease 0.5s;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(to left, transparent, #00ffff);
+            transition: width 0.5s ease 0.5s;
+        }
+
+        .timeline-item.visible:nth-child(odd)::after,
+        .timeline-item.visible:nth-child(even)::after {
+            width: 30px;
+        }
+
+        .timeline-content {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.5s ease 0.7s, box-shadow 0.5s ease 0.7s;
+        }
+
+        .timeline-item.visible .timeline-content {
+            transform: translateY(0);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .timeline-year {
+            font-size: 24px;
+            color: #00ffff;
+            margin-bottom: 10px;
+        }
+
+        .timeline-text {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+            color: #e0e0e0;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 50px 30px;
+            background: #0a0a0a;
+            text-align: center;
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .footer-logo {
+            font-size: 32px;
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            margin-bottom: 20px;
+        }
+
+        .footer-link {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #00ffff;
+        }
+
+        .footer-copyright {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 40px; }
+            .hero-subtitle { font-size: 18px; }
+            .section-title { font-size: 36px; }
+            
+            .workflow-step, .workflow-step:nth-child(even) {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .step-number {
+                margin: 0 0 20px 0;
+            }
+            
+            .timeline-container::before {
+                left: 30px;
+            }
+            
+            .timeline-item:nth-child(odd),
+            .timeline-item:nth-child(even) {
+                padding-left: 70px;
+                padding-right: 0;
+                transform: translateX(0) translateY(50px);
+            }
+            
+            .timeline-item.visible:nth-child(odd),
+            .timeline-item.visible:nth-child(even) {
+                transform: translateX(0) translateY(0);
+            }
+            
+            .timeline-item:nth-child(odd)::before,
+            .timeline-item:nth-child(even)::before {
+                left: 20px;
+                right: auto;
+            }
+            
+            .timeline-item:nth-child(odd)::after,
+            .timeline-item:nth-child(even)::after {
+                left: 40px;
+                right: auto;
+                width: 0;
+                background: linear-gradient(to right, transparent, #00ffff);
+            }
+            
+            .timeline-item.visible:nth-child(odd)::after,
+            .timeline-item.visible:nth-child(even)::after {
+                width: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">LUMINOVA</a>
+        <a href="index.html" class="back-button">Back to Home</a>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1 class="hero-title">LUMINOVA</h1>
+        <p class="hero-subtitle">Discover how LUMINOVA's groundbreaking holographic technology will transform industries and human experience.</p>
+    </section>
+    
+    <!-- Workflow Section -->
+    <section class="workflow-section">
+        <h2 class="section-title">Technology Workflow</h2>
+        <div class="workflow-container">
+            <div class="workflow-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3 class="step-title">Spatial Analysis</h3>
+                    <p class="step-description">LUMINOVA's AI-powered scanning technology maps and analyzes the physical environment, identifying optimal projection surfaces and spatial characteristics. This preliminary step creates a digital twin of the space, establishing the foundation for holographic display.</p>
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3 class="step-title">Neural Interface Calibration</h3>
+                    <p class="step-description">The system's neural interface adapts to individual user perception patterns, calibrating light frequencies and projection densities to optimize visual clarity. This personalization process ensures that holographic elements appear solid and visually consistent across different lighting conditions.</p>
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3 class="step-title">Quantum Light Field Generation</h3>
+                    <p class="step-description">LUMINOVA's quantum processors generate complex light fields using coherent laser arrays, creating volumetric displays that can be viewed from any angle. Unlike traditional holograms, these light structures have physical properties that enable tactile interaction through haptic feedback systems.</p>
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3 class="step-title">Environmental Integration</h3>
+                    <p class="step-description">The system blends holographic elements with physical surroundings using advanced occlusion and shadow rendering. Real-time environmental analysis allows holograms to interact naturally with existing objects, responding to changes in ambient lighting and physical movement within the space.</p>
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3 class="step-title">Continuous Adaptation</h3>
+                    <p class="step-description">LUMINOVA's self-learning algorithms continuously refine holographic quality based on user interaction patterns and environmental changes. The system evolves through regular use, improving stability, resolution, and interaction fluidity while minimizing energy consumption.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Use Cases Section -->
+    <section class="use-cases-section">
+        <h2 class="section-title">Applications</h2>
+        <div class="use-cases-grid">
+            <div class="use-case-card">
+                <div class="use-case-image"></div>
+                <div class="use-case-content">
+                    <h3 class="use-case-title">Interactive Web Applications</h3>
+                    <p class="use-case-description">LUMINOVA's JavaScript API enables developers to create immersive web applications with holographic elements that respond to user interactions. Complex 3D visualizations are rendered client-side using WebGL and Three.js, allowing for seamless integration with existing web platforms without special plugins.</p>
+                </div>
+            </div>
+            
+            <div class="use-case-card">
+                <div class="use-case-image"></div>
+                <div class="use-case-content">
+                    <h3 class="use-case-title">Real-time Data Visualization</h3>
+                    <p class="use-case-description">Business intelligence platforms leverage LUMINOVA's JavaScript libraries to transform data into interactive holographic dashboards. Using D3.js and custom WebGL shaders, analysts can manipulate complex datasets through intuitive gestures, revealing patterns and insights that would remain hidden in traditional 2D visualizations.</p>
+                </div>
+            </div>
+            
+            <div class="use-case-card">
+                <div class="use-case-image"></div>
+                <div class="use-case-content">
+                    <h3 class="use-case-title">React-based Holographic Interfaces</h3>
+                    <p class="use-case-description">LUMINOVA's React component library enables rapid development of holographic user interfaces. Developers can use familiar React patterns while LUMINOVA's rendering engine handles the complex transformation of virtual DOM elements into spatial holographic projections, complete with physics-based interactions.</p>
+                </div>
+            </div>
+            
+            <div class="use-case-card">
+                <div class="use-case-image"></div>
+                <div class="use-case-content">
+                    <h3 class="use-case-title">Node.js Spatial Computing</h3>
+                    <p class="use-case-description">Backend systems powered by Node.js process spatial data and holographic scene compositions in real-time. The event-driven architecture allows for efficient management of thousands of simultaneous holographic elements with minimal latency, enabling multi-user holographic experiences across distributed environments.</p>
+                </div>
+            </div>
+            
+            <div class="use-case-card">
+                <div class="use-case-image"></div>
+                <div class="use-case-content">
+                    <h3 class="use-case-title">Angular-powered Enterprise Solutions</h3>
+                    <p class="use-case-description">Enterprise applications built with Angular integrate LUMINOVA's holographic capabilities through modular components. Complex business workflows transform into intuitive spatial interfaces where team members can collaborate on data models represented as interactive holograms, controlled through TypeScript-based business logic.</p>
+                </div>
+            </div>
+            
+            <div class="use-case-card">
+                <div class="use-case-image"></div>
+                <div class="use-case-content">
+                    <h3 class="use-case-title">Vue.js Holographic Experiences</h3>
+                    <p class="use-case-description">Lightweight and performance-optimized Vue.js applications leverage LUMINOVA's holographic renderer to create responsive spatial experiences. The reactive data binding system of Vue seamlessly extends to three-dimensional space, allowing developers to create stunning holographic interfaces with minimal effort and maximum control.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Timeline Section -->
+    <section class="timeline-section">
+        <h2 class="section-title">Development Timeline</h2>
+        <div class="timeline-container">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2025</div>
+                    <p class="timeline-text">Initial deployment of LUMINOVA systems in specialized professional environments including surgical theaters, aerospace design studios, and high-end architectural firms.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2027</div>
+                    <p class="timeline-text">Adaptation for educational institutions and corporate environments, with streamlined installation processes and standardized integration protocols.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2029</div>
+                    <p class="timeline-text">Commercial retail integration begins, featuring compact LUMINOVA units for product visualization and customer experience enhancement.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2031</div>
+                    <p class="timeline-text">Home entertainment systems featuring LUMINOVA technology become available, enabling immersive media experiences in residential settings.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2034</div>
+                    <p class="timeline-text">Complete integration into smart home ecosystems, with holographic interfaces becoming the standard for home automation and communication systems.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Future Vision Section -->
+    <section class="future-vision-section">
+        <h2 class="section-title">Our Vision For The Future</h2>
+        <div class="vision-content">
+            <p class="vision-text">We envision a world where digital and physical realities seamlessly blend, enhancing human potential rather than replacing human connection. LUMINOVA's technology transforms environments into responsive, intelligent spaces that adapt to human needs while preserving the authentic textures of physical reality.</p>
+            <p class="vision-text">By 2035, we project that holographic interfaces will become as commonplace as touchscreens are today—intuitive, essential tools that fade into the background of consciousness while dramatically expanding our capabilities for creation, communication, and understanding.</p>
+            <a href="luminovabooking.html" class="cta-button">Join The Revolution</a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo">LUMINOVA</div>
+        <div class="footer-links">
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="luminovaearly.html" class="footer-link">Early Development</a>
+            <a href="luminovadigital.html" class="footer-link">Digital Revolution</a>
+            <a href="luminova_interactive.html" class="footer-link">Interactive Holograms</a>
+            <a href="luminovaTermsCond.html" class="footer-link">Terms & Conditions</a>
+        </div>
+        <div class="footer-copyright">© 2025 LUMINOVA Technologies. All rights reserved.</div>
+    </footer>
+
+    <script>
+        // Create particles for background effect
+        const particlesContainer = document.getElementById('particles');
+        
+        function createParticles() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Scroll animation function
+        function handleScrollAnimations() {
+            const animatedElements = document.querySelectorAll('.section-title, .workflow-step, .use-case-card, .timeline-container, .timeline-item');
+            
+            animatedElements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight * 0.85;
+                
+                if (elementPosition < screenPosition) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+        
+        // Initialize particles and scroll handling on load
+        window.addEventListener('load', () => {
+            createParticles();
+            handleScrollAnimations(); // Check for visible elements on initial load
+        });
+        
+        // Handle scroll events
+        window.addEventListener('scroll', handleScrollAnimations);
+    </script>
+</body>
+</html>
